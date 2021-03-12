@@ -2,6 +2,21 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+def get_user_id(user):
+	"""
+	Retrieve user's numeric ID
+
+	Args:
+		user - string of Letterboxd username
+	Returns: int user ID
+	"""
+	base_url = 'https://letterboxd.com/{}/'.format(user)
+	base_url_text = requests.get(base_url).text
+	soup = BeautifulSoup(base_url_text, 'html.parser')
+
+	# there has got to be a less random way to grab this than from here
+	return int(soup.find(attrs={'data-popmenu-id':True})['data-popmenu-id'].split('-')[-1])
+
 def get_watched_film_urls(user):
 	"""
 	Retrieve URLs for each page in a user's list of watched films ("Films" tab).
