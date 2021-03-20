@@ -40,7 +40,7 @@ class LetterboxdWebScraper:
 			return ['https://letterboxd.com/{}/films/page/{}/'.format(user, i) for i in range(1, final_page_num + 1)]
 
 		# only one page of reviews
-		except AttributeError as e:
+		except AttributeError:
 			return [base_url]
 
 	def get_review_urls(self, user):
@@ -61,7 +61,7 @@ class LetterboxdWebScraper:
 			return ['https://letterboxd.com/{}/films/reviews/page/{}/'.format(user, i) for i in range(1, final_page_num + 1)]
 
 		# only one page of reviews
-		except AttributeError as e:
+		except AttributeError:
 			return [base_url]
 
 	def get_film_data(self, film_url):
@@ -131,7 +131,7 @@ class LetterboxdWebScraper:
 				# Need to collect ratings from user's Films page since a user may have rated a film without reviewing it
 				try:
 					rating = int(film_tag.find('span', class_='rating')['class'][-1].split('-')[-1])
-				except TypeError as ex:
+				except TypeError:
 					rating = None
 				
 				film_data['latest_rating'] = rating
@@ -160,7 +160,7 @@ class LetterboxdWebScraper:
 				movie_id = int(film_tag.find(attrs={'data-film-id':True})['data-film-id'])
 				try:
 					rating = int(film_tag.find('span', class_='rating')['class'][-1].split('-')[-1])
-				except TypeError as ex:
+				except TypeError:
 					rating = None
 
 				

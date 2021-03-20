@@ -1,4 +1,5 @@
 import os
+import sys
 import csv
 
 from scraper import LetterboxdWebScraper
@@ -14,7 +15,7 @@ def write_init_csvs(user):
 	if not os.path.exists('../data'):
 		os.mkdir('../data')
 
-	dir_path = os.path.dirname(__file__) + '/../data/'
+	dir_path = os.getcwd() + '/../data/'
 
 	scraper = LetterboxdWebScraper()
 
@@ -22,7 +23,7 @@ def write_init_csvs(user):
 	all_film_data = scraper.get_all_user_film_data(user)
 	all_review_data = scraper.get_all_user_review_data(user)
 
-	with open(dir_path + 'user.csv', 'w', newline='') as csvfile:
+	with open(dir_path + 'users.csv', 'w', newline='') as csvfile:
 		writer = csv.writer(csvfile, delimiter=',')
 		writer.writerow(['user_id'])
 		writer.writerow([user_id])
@@ -75,4 +76,11 @@ def write_init_csvs(user):
 		writer.writerow(review_fieldnames)
 		writer.writerows(review_csv_data)
 
+if __name__ == "__main__":
+	try:
+		user = sys.argv[1]
+	except IndexError:
+		print("Provide a Letterboxd username")
+		sys.exit(1)
 
+	write_init_csvs(user)
