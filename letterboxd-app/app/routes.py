@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, session
 
 from app import app
 from app.forms import QueryForm
-from app.queries import query_movie
+from app.queries import query_movie, query_person
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -11,7 +11,7 @@ def index():
 	
 	results = []
 	results_type = ''
-	dropdown_data = ''
+	search_term = ''
 
 	"""
 	if 'query_results' in session:
@@ -28,8 +28,13 @@ def index():
 			session['results_type'] = 'movie'
 			session['query_results'] = query_movie(form.search_term.data)
 			"""
-			dropdown_data = 'movie'
 			results_type = 'movie'
-			results = query_movie(form.search_term.data)
+			search_term = form.search_term.data
+			results = query_movie(search_term)
+		elif form.query_type.data == 'person':
+			results_type = 'person'
+			search_term = form.search_term.data
+			results = query_person(search_term)
+		form.search_term.data = ''
 		#return redirect(url_for('index'))
-	return render_template('index.html', form=form, results=results, results_type=results_type)
+	return render_template('index.html', form=form, search_term=search_term, results=results, results_type=results_type)
