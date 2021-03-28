@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Query Tool</h1>
+	<form action="" method="post" novalidate>
+		{{ form.hidden_tag() }}
+		<p>
+			{{ form.query_type() }}
+			{{ form.search_term(size=32, autocomplete="off") }}
+			{{ form.submit() }}
+		</p>
+		<p>
+			{% for error in form.query_type.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		<p>
+			{% for error in form.search_term.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+			{% endfor %}
+		</p>
+		{% if results %}
+			<hr>
+			{% if results_type == "movie" %}
+				<ul>
+				{% for result in results %}
+					<li><p>Name: {{ result.movie_name }}</p><p>Rating: {{ result.rating }}</p></li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+		{% endif %}
+	</form>
+{% endblock %}

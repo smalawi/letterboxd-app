@@ -65,6 +65,10 @@ def create_tables():
 		);
 	""")
 
+	cursor.execute("""
+		CREATE EXTENSION unaccent;
+	""")
+
 	conn.commit()
 
 	cursor.close()
