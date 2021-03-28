@@ -16,7 +16,8 @@ def create_tables():
 		CREATE TABLE movie (
 			movie_id	integer PRIMARY KEY,
 			movie_name	varchar,
-			year		integer
+			year		integer,
+			movie_href	varchar UNIQUE
 		);
 	""")
 
@@ -61,12 +62,13 @@ def create_tables():
 			viewing_id		integer PRIMARY KEY,
 			user_id			integer references users (user_id) ON DELETE CASCADE,
 			movie_id		integer references movie (movie_id) ON DELETE CASCADE,
-			rating			integer
+			rating			integer,
+			review_href		varchar UNIQUE
 		);
 	""")
 
 	cursor.execute("""
-		CREATE EXTENSION unaccent;
+		CREATE EXTENSION IF NOT EXISTS unaccent;
 	""")
 
 	conn.commit()

@@ -28,7 +28,7 @@ def write_init_csvs(user):
 		writer.writerow(['user_id'])
 		writer.writerow([user_id])
 
-	movie_fieldnames = ['movie_id', 'name', 'year']
+	movie_fieldnames = ['movie_id', 'name', 'year', 'movie_href']
 
 	with open(dir_path + 'movie.csv', 'w', newline='') as csvfile:
 		writer = csv.DictWriter(csvfile, fieldnames=movie_fieldnames, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL, extrasaction='ignore')
@@ -68,8 +68,8 @@ def write_init_csvs(user):
 		writer.writerow(movieperson_fieldnames)
 		writer.writerows(movieperson_csv_data)
 	
-	review_fieldnames = ['viewing_id', 'user_id', 'movie_id', 'rating']
-	review_csv_data = [[r['viewing_id'], user_id, r['movie_id'], r['rating']] for r in all_review_data]
+	review_fieldnames = ['viewing_id', 'user_id', 'movie_id', 'rating', 'review_href']
+	review_csv_data = [[r['viewing_id'], user_id, r['movie_id'], r['rating'], r['review_href']] for r in all_review_data]
 
 	with open(dir_path + 'review.csv', 'w', newline='') as csvfile:
 		writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)

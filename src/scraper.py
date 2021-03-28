@@ -136,6 +136,8 @@ class LetterboxdWebScraper:
 				
 				film_data['latest_rating'] = rating
 
+				film_data['movie_href'] = film_url.split('/')[-2]
+
 				all_film_data.append(film_data)
 			
 		return all_film_data
@@ -158,6 +160,7 @@ class LetterboxdWebScraper:
 			for film_tag in soup.find_all('li', class_='film-detail'):
 				viewing_id = int(film_tag.find(attrs={'data-likeable-uid':True})['data-likeable-uid'].split(':')[-1])
 				movie_id = int(film_tag.find(attrs={'data-film-id':True})['data-film-id'])
+				review_href = film_tag.find('a', class_='context')['href'].split('/', 3)[-1]
 				try:
 					rating = int(film_tag.find('span', class_='rating')['class'][-1].split('-')[-1])
 				except TypeError:
@@ -167,6 +170,7 @@ class LetterboxdWebScraper:
 				review_info = {
 					'viewing_id': viewing_id,
 					'movie_id': movie_id,
+					'review_href': review_href,
 					'rating': rating
 				}
 
