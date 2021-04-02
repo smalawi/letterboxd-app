@@ -49,4 +49,22 @@ def movie(movie_href):
 def person(person_id):
 	person_name = get_person_name(person_id)
 	person_movies_info = get_person_movies(person_id)
-	return render_template('person.html', person_id=person_id, person_name=person_name, person_movies_info=person_movies_info)
+	all_credits = [m['role'] for m in person_movies_info]
+	unique_roles = list(set(all_credits))
+	most_common_role = max(set(all_credits), key=all_credits.count)
+
+	# for writer-directors - probably should have default role of director
+	if all_credits.count(most_common_role) == all_credits.count('director'):
+		most_common_role = 'director'
+
+	# place most common role at beginning of list for default dropdown value
+	mcr_idx = unique_roles.index(most_common_role)
+	temp = unique_roles[mcr_idx]
+	unique_roles[mcr_idx] = unique_roles[0]
+	unique_roles[0] = temp
+
+	return render_template('person.html',
+								person_id=person_id,
+								person_name=person_name,
+								person_movies_info=person_movies_info,
+								unique_roles=unique_roles)
