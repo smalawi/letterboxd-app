@@ -25,13 +25,13 @@
 			{% if results_type == "movie" %}
 				<ul>
 				{% for result in results %}
-					<li><p>Name: {{ result.movie_name }}</p><p>Rating: {{ result.rating }}</p></li>
+					<li><p>Name: <a href="{{ url_for('movie', movie_href=result.movie_href) }}">{{ result.movie_name }}</a></p><p>Rating: {{ result.rating }}</p></li>
 				{% endfor %}
 				</ul>
 			{% elif results_type == "person" %}
 				<ul>
 				{% for result in results %}
-					<li>{{ result.person_name }} - {{ result.role }} ({{ result.ct }})</li>
+					<li><a href="{{ url_for('person', person_id=result.person_id) }}">{{ result.person_name }}</a> - {{ result.role }} ({{ result.ct }})</li>
 				{% endfor %}
 				</ul>
 			{% endif %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>{{ person_name }}</h1>
+	<h2>Credits</h2>
+	<table>
+		{% for credit in person_movies_info %}
+			<tr>
+				<td><a href="{{ url_for('movie', movie_href=credit.movie_href) }}">{{ credit.movie_name }}</a></td>
+				<td>{{ credit.year }}</td>
+				<td>{{ credit.role }}</td>
+				<td>{{ credit.latest_rating }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+{% endblock %}

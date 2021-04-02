@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div id="movie-header">
+		<h1>{{ movie_info.movie_name }}</h1><span>({{ movie_info.year }})</span>
+	</div>
+	<div>
+		<a href="{{ 'https://letterboxd.com/film/{}/'.format(movie_href) }}" target="_blank" rel="noopener noreferrer"><i>See on Letterboxd</i></a>
+	</div>
+	<h2>Cast and crew</h2>
+	{% if movieperson_info|length > 0 %}
+		<table>
+			{% for movieperson in movieperson_info %}
+				<tr>
+					<td><a href="{{ url_for('person', person_id=movieperson.person_id) }}">{{ movieperson.person_name }}</a></td>
+					<td>{{ movieperson.role }}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+	<div>None recorded</div>
+	{% endif %}
+{% endblock %}

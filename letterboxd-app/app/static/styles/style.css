@@ -1,0 +1,13 @@
+#movie-header h1 {
+	display: inline-block;
+}
+
+#movie-header span {
+	font-size: 22px;
+	font-style: italic;
+	padding-left: 8px;
+}
+
+td {
+	padding: 0 150px 0 0;
+}

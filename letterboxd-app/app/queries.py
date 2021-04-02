@@ -2,10 +2,11 @@ from unidecode import unidecode
 
 from app.database import select
 
-def query_movie(search_term):
+def search_for_movie(search_term):
 	query = """
 		SELECT
 			m.movie_name,
+			m.movie_href,
 			um.latest_rating AS rating 
 		FROM
 			Movie m
@@ -22,9 +23,9 @@ def query_movie(search_term):
 	
 	return results
 
-def query_person(search_term):
+def search_for_person(search_term):
 	query = """
-		SELECT person_name, role, ct
+		SELECT person_id, person_name, role, ct
 		FROM
 			(
 			SELECT *, ROW_NUMBER() OVER (PARTITION BY person_id ORDER BY ct DESC, role) rn
@@ -54,6 +55,59 @@ def query_person(search_term):
 		ORDER BY ct DESC
 		;
 		""".format(search_term)
+	results = select(query)
+	
+	return results
+
+def get_movie_info(movie_href):
+	query = """
+		SELECT * FROM Movie WHERE movie_href = '{}';
+		""".format(movie_href)
+	results = select(query)
+	
+	return results[0]
+
+def get_movie_persons(movie_href):
+	query = """
+		SELECT mp.*, p.person_name
+		FROM MoviePerson mp
+		LEFT JOIN Person p
+		ON mp.person_id = p.person_id
+		WHERE mp.movie_id IN
+		(
+			SELECT movie_id FROM Movie WHERE movie_href = '{}'
+		)
+		ORDER BY mp.role;
+		""".format(movie_href)
+	results = select(query)
+	
+	return results
+
+def get_person_name(person_id):
+	query = """
+		SELECT person_name FROM Person WHERE person_id = '{}';
+		""".format(person_id)
+	results = select(query)
+	
+	return results[0]['person_name']
+
+def get_person_movies(person_id):
+	query = """
+		SELECT
+			m.movie_name,
+			m.year,
+			m.movie_href,
+			mp.role,
+			um.latest_rating,
+			m.movie_href
+		FROM MoviePerson mp
+		LEFT JOIN Movie m
+		ON mp.movie_id = m.movie_id
+		LEFT JOIN UserMovie um
+		ON mp.movie_id = um.movie_id
+		WHERE mp.person_id = '{}'
+		ORDER BY mp.role, m.year, m.movie_name;
+		""".format(person_id)
 	results = select(query)
 	
 	return results
