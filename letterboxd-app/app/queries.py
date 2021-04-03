@@ -77,7 +77,7 @@ def get_movie_persons(movie_href):
 		(
 			SELECT movie_id FROM Movie WHERE movie_href = '{}'
 		)
-		ORDER BY mp.role;
+		ORDER BY mp.role, mp.billing;
 		""".format(movie_href)
 	results = select(query)
 	
