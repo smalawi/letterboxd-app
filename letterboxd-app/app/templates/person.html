@@ -18,7 +18,7 @@
 		</thead>
 		<tbody>
 			{% for credit in person_movies_info %}
-				<tr data-role="{{ credit.role }}">
+				<tr data-role="{{ credit.role }}" style="display: none">
 					<td>{{ credit.year }}</td>
 					<td><a href="{{ url_for('movie', movie_href=credit.movie_href) }}">{{ credit.movie_name }}</a></td>
 					<td>{{ credit.latest_rating }}</td>

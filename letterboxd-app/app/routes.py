@@ -43,7 +43,8 @@ def index():
 def movie(movie_href):
 	movie_info = get_movie_info(movie_href)
 	movieperson_info = get_movie_persons(movie_href)
-	return render_template('movie.html', movie_href=movie_href, movie_info=movie_info, movieperson_info=movieperson_info)
+	cast_count = len([c for c in movieperson_info if c['role'] == 'actor'])
+	return render_template('movie.html', movie_href=movie_href, movie_info=movie_info, movieperson_info=movieperson_info, cast_count=cast_count)
 
 @app.route('/person/<person_id>')
 def person(person_id):

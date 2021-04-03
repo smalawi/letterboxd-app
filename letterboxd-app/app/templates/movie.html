@@ -7,17 +7,40 @@
 	<div>
 		<a href="{{ 'https://letterboxd.com/film/{}/'.format(movie_href) }}" target="_blank" rel="noopener noreferrer"><i>See on Letterboxd</i></a>
 	</div>
-	<h2>Cast and crew</h2>
+	<h2>Cast</h2>
+	{% if movieperson_info|length > 0 %}
+		<ul id="castList">
+			{% for movieperson in movieperson_info %}
+				{% if movieperson.role == 'actor' %}
+					<li>
+						<a href="{{ url_for('person', person_id=movieperson.person_id) }}">{{ movieperson.person_name }}</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	{% else %}
+	<div>None recorded</div>
+	{% endif %}
+	{% if cast_count > 6 %}
+		<p class="expander" id="loadMore">Load more >>></p>
+		<p class="expander" id="showLess" style="display: none"><<< Show less</p>
+	{% endif %}
+	<h2>Crew</h2>
 	{% if movieperson_info|length > 0 %}
 		<table>
 			{% for movieperson in movieperson_info %}
-				<tr>
-					<td><a href="{{ url_for('person', person_id=movieperson.person_id) }}">{{ movieperson.person_name }}</a></td>
-					<td>{{ movieperson.role }}</td>
-				</tr>
+				{% if movieperson.role != 'actor' %}
+					<tr>
+						<td><a href="{{ url_for('person', person_id=movieperson.person_id) }}">{{ movieperson.person_name }}</a></td>
+						<td>{{ movieperson.role }}</td>
+					</tr>
+				{% endif %}
 			{% endfor %}
 		</table>
 	{% else %}
 	<div>None recorded</div>
 	{% endif %}
+	<script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
+	<script type=text/javascript src="{{
+		url_for('static', filename='js/movie_cast_collapse.js') }}" defer></script>
 {% endblock %}
