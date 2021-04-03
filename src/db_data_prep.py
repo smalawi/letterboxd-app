@@ -46,17 +46,17 @@ def write_init_csvs(user):
 	person_fieldnames = ['person_id', 'name']
 	person_csv_data = []
 
-	movieperson_fieldnames = ['movie_id', 'person_id', 'role']
+	movieperson_fieldnames = ['movie_id', 'person_id', 'role', 'billing']
 	movieperson_csv_data = []
 
 	persons = set()
 
 	for film in all_film_data:
-		for role, person_id, person in film['cast_and_crew']:
+		for role, person_id, person, billing in film['cast_and_crew']:
 			if person_id not in persons:
 				persons.add(person_id)
 				person_csv_data.append([person_id, person])
-			movieperson_csv_data.append([film['movie_id'], person_id, role])
+			movieperson_csv_data.append([film['movie_id'], person_id, role, billing])
 	
 	with open(dir_path + 'person.csv', 'w', newline='') as csvfile:
 		writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)

@@ -35,6 +35,7 @@ def create_tables():
 			movie_id	integer references movie (movie_id) ON DELETE CASCADE,
 			person_id	varchar references person (person_id) ON DELETE CASCADE,
 			role		varchar,
+			billing		integer,
 			PRIMARY KEY (movie_id, person_id, role)
 		);
 	""")

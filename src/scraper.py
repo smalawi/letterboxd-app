@@ -91,8 +91,10 @@ class LetterboxdWebScraper:
 		# Add cast to film_info['cast_and_crew']
 		cast_div = film_soup.find('div', id='tab-cast')
 		if cast_div: # some films have no cast div (e.g. some documentaries)
+			billing = 1
 			for cast_tag in cast_div.find_all('a', href=re.compile('/actor/')):
-				film_info['cast_and_crew'].append(('actor', cast_tag['href'].split('/')[2], cast_tag.string))
+				film_info['cast_and_crew'].append(('actor', cast_tag['href'].split('/')[2], cast_tag.string, billing))
+				billing += 1
 
 		# Add crew to film_info['cast_and_crew']
 		crew_roles = ['director', 'writer', 'editor', 'cinematography', 'composer']
@@ -100,11 +102,13 @@ class LetterboxdWebScraper:
 
 		if crew_div: # some films have no crew div (e.g. "Toy Story 3: Na Moda com Ken!" (2010) (5 stars))
 			for crew_role in crew_roles:
+				billing = 1
 				for crew_tag in crew_div.find_all('a', href=re.compile('/{}/'.format(crew_role))):
 					if crew_role == 'cinematography':
-						film_info['cast_and_crew'].append(('cinematographer', crew_tag['href'].split('/')[2], crew_tag.string))
+						film_info['cast_and_crew'].append(('cinematographer', crew_tag['href'].split('/')[2], crew_tag.string, billing))
 					else:
-						film_info['cast_and_crew'].append((crew_role, crew_tag['href'].split('/')[2], crew_tag.string))
+						film_info['cast_and_crew'].append((crew_role, crew_tag['href'].split('/')[2], crew_tag.string, billing))
+					billing += 1
 		
 		return film_info
 
