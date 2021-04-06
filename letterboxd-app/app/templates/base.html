@@ -1,20 +1,24 @@
 <html>
-	<head>
-		<title>Letterboxd</title>
-		<link rel= "stylesheet" href= "{{ url_for('static', filename='styles/style.css') }}">
-	</head>
-	<body>
-		<div><a href="/index">Home</a></div>
-		<hr>
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<ul>
-			{% for message in messages %}
-			<li>{{ message }}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-		{% endwith %}
-		{% block content %}{% endblock %}
-	</body>
+	<div class="rounded-panel">
+		<div class="panel-contents">
+			<head>
+				<title>Letterboxd</title>
+				<link rel= "stylesheet" href= "{{ url_for('static', filename='styles/style.css') }}">
+			</head>
+			<body>
+				<div><a href="/index">Home</a></div>
+				<hr>
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<ul>
+					{% for message in messages %}
+					<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% endwith %}
+				{% block content %}{% endblock %}
+			</body>
+		</div>
+	</div>
 </html>

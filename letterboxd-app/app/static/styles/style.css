@@ -1,3 +1,35 @@
+html {
+	background-color: #fcfff5;
+}
+
+.rounded-panel {
+	height: 100%;
+	border-color: black;
+	border-width: 10px;
+	border-style: double;
+	border-radius: 30px;
+	width: 800px;
+	height: 700px;
+	margin: auto;
+	overflow: auto;
+}
+
+.panel-contents {
+	margin: 15px;
+}
+
+/*
+h1 {
+	/* animation: colorshift 1s infinite alternate;
+	background: linear-gradient(to top left, red, rgba(255, 153, 150, 0), red), linear-gradient(to top right, yellow, rgba(255, 153, 150, 0), rgba(0, 255, 0, 1)) rgba(0, 153, 255, 1);
+	/* clip hackery
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	display: inline-block;
+}
+*/
+
 a:visited {
 	color: blue;
 }
@@ -33,6 +65,6 @@ ul {
 	margin: 0; /* Remove margins */
 }
 
-li {
+.hidden {
 	display: none;
 }
