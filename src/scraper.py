@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -157,6 +158,23 @@ class LetterboxdWebScraper:
 		"""
 		review_data = []
 
+		def parse_date(film_tag, review_href):
+			try:
+				date_str = film_tag.find('span', class_='_nobr').text
+				parsed_date_str = datetime.strptime(date_str, '%d %b, %Y').strftime('%m/%d/%Y')
+
+			except ValueError:
+
+				try:
+					date_str = film_tag.find('time', class_='localtime-dd-mmm-yyyy')['datetime'].split('T')[0]
+					parsed_date_str = datetime.strptime(date_str, '%Y-%m-%d').strftime('%m/%d/%Y')
+
+				except ValueError:
+					parsed_date_str = ''
+					print("Couldn't parse date for {}".format(review_href))
+			
+			return parsed_date_str
+
 		for reviews_url in self.get_review_urls(user):
 			review_url_text = requests.get(reviews_url).text
 			soup = BeautifulSoup(review_url_text, 'html.parser')
@@ -165,6 +183,7 @@ class LetterboxdWebScraper:
 				viewing_id = int(film_tag.find(attrs={'data-likeable-uid':True})['data-likeable-uid'].split(':')[-1])
 				movie_id = int(film_tag.find(attrs={'data-film-id':True})['data-film-id'])
 				review_href = film_tag.find('a', class_='context')['href'].split('/', 3)[-1]
+				viewing_date = parse_date(film_tag, review_href)
 				try:
 					rating = int(film_tag.find('span', class_='rating')['class'][-1].split('-')[-1])
 				except TypeError:
@@ -174,6 +193,7 @@ class LetterboxdWebScraper:
 				review_info = {
 					'viewing_id': viewing_id,
 					'movie_id': movie_id,
+					'viewing_date': viewing_date,
 					'review_href': review_href,
 					'rating': rating
 				}

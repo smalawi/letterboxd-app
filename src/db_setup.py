@@ -1,14 +1,41 @@
 import os
+import sys
 import psycopg2
+from dotenv import load_dotenv
 
-def create_tables():
+def get_connection(local_flag):
 	"""
-	Creates tables in database letterboxddb
+	Creates connection to Postgres database
 
-	Args: None
+	Args:
+		local_flag - '-l' or '-local' to setup local db rather than RDS
+	Returns: psycopg2 connection to database
+	"""
+
+	load_dotenv()
+
+	if local_flag:
+		conn = psycopg2.connect(database=os.environ.get('LOCAL_BOXD_DB_NAME'))
+	else:
+		conn = psycopg2.connect(
+			database=os.environ.get('BOXD_DB_NAME'),
+			user=os.environ.get('BOXD_DB_USER'),
+			password=os.environ.get('BOXD_DB_PASSWORD'),
+			host=os.environ.get('BOXD_DB_HOST'),
+			port=os.environ.get('BOXD_DB_PORT')
+		)
+	
+	return conn
+
+def create_tables(conn):
+	"""
+	Creates tables in database
+
+	Args:
+		conn - psycopg2 connection to database
 	Returns: None
 	"""
-	conn =  psycopg2.connect("dbname=letterboxddb")
+
 	cursor = conn.cursor()
 
 	cursor.execute("""
@@ -63,6 +90,7 @@ def create_tables():
 			viewing_id		integer PRIMARY KEY,
 			user_id			integer references users (user_id) ON DELETE CASCADE,
 			movie_id		integer references movie (movie_id) ON DELETE CASCADE,
+			viewing_date	date,
 			rating			integer,
 			review_href		varchar UNIQUE
 		);
@@ -75,16 +103,16 @@ def create_tables():
 	conn.commit()
 
 	cursor.close()
-	conn.close()
 
-def load_data_into_tables():
+def load_data_into_tables(conn):
 	"""
 	Loads tables with initial data from CSVs
 
-	Args: None
+	Args:
+		conn - psycopg2 connection to database
 	Returns: None
 	"""
-	conn =  psycopg2.connect("dbname=letterboxddb")
+
 	cursor = conn.cursor()
 
 	dir_path = os.getcwd() + '/../data/'
@@ -98,8 +126,23 @@ def load_data_into_tables():
 	conn.commit()
 
 	cursor.close()
-	conn.close()
 
 if __name__ == "__main__":
-	create_tables()
-	load_data_into_tables()
+	try:
+		flag = sys.argv[1]
+	except IndexError:
+		flag = ''
+	
+	if flag and flag not in ['-l', '--local']:
+		print("Unknown flag {} - use -l or --local to populate local db".format(flag))
+		sys.exit(1)
+
+	conn = get_connection(flag)
+
+	try:
+		create_tables(conn)
+		load_data_into_tables(conn)
+	except Exception as e:
+		print(e)
+
+	conn.close()

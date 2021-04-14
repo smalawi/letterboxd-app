@@ -1,10 +1,17 @@
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import g
 from app import app
 
 def connect_db():
-	conn = psycopg2.connect(database='letterboxddb')
+	conn = psycopg2.connect(
+		database=os.environ.get('BOXD_DB_NAME'),
+		user=os.environ.get('BOXD_DB_USER'),
+		password=os.environ.get('BOXD_DB_PASSWORD'),
+		host=os.environ.get('BOXD_DB_HOST'),
+		port=os.environ.get('BOXD_DB_PORT')
+	)
 	return conn
 
 def get_db():
