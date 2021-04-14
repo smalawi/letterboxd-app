@@ -10,18 +10,18 @@
 			{% endfor %}
 		</select>
 	</p>
-	<table>
+	<table id="personTable">
 		<thead>
-			<th>Year</th>
-			<th>Name</th>
-			<th>Rating</th>
+			<th style="width: 60px;">Year</th>
+			<th style="width: 220px;">Name</th>
+			<th style="width: 100px;">Rating</th>
 		</thead>
 		<tbody>
 			{% for credit in person_movies_info %}
 				<tr data-role="{{ credit.role }}" style="display: none">
-					<td>{{ credit.year }}</td>
-					<td><a href="{{ url_for('movie', movie_href=credit.movie_href) }}">{{ credit.movie_name }}</a></td>
-					<td>{{ credit.latest_rating }}</td>
+					<td style="width: 60px;">{{ credit.year }}</td>
+					<td style="width: 220px;"><a href="{{ url_for('movie', movie_href=credit.movie_href) }}">{{ credit.movie_name }}</a></td>
+					<td style="width: 100px;">{{ credit.star_rating }}</td>
 				</tr>
 			{% endfor %}
 		</tbody>

@@ -21,20 +21,31 @@
 		</p>
 		{% if results %}
 			<hr>
-			<h2>Search results for {{ results_type }} "{{ search_term }}":</h2>
+			<h2 style="margin-bottom: 7px;">Search results for {{ results_type }} "{{ search_term }}":</h2>
 			{% if results_type == "movie" %}
-				<ul>
+				<ul style="margin-left: 15px;">
 				{% for result in results %}
-					<li><p>Name: <a href="{{ url_for('movie', movie_href=result.movie_href) }}">{{ result.movie_name }}</a></p><p>Rating: {{ result.rating }}</p></li>
+					<li style="margin: 5px 0;">
+						<div><a href="{{ url_for('movie', movie_href=result.movie_href) }}">{{ result.movie_name }}</a> &nbsp;-&nbsp; {{ result.star_rating }}</div>
+						<div style="font-style: italic; text-indent: 2em;">dir. {{ result.director }}</div>
+					</li>
 				{% endfor %}
 				</ul>
 			{% elif results_type == "person" %}
-				<ul>
+				<ul style="margin-left: 15px;">
 				{% for result in results %}
 					<li><a href="{{ url_for('person', person_id=result.person_id) }}">{{ result.person_name }}</a> - {{ result.role }} ({{ result.ct }})</li>
 				{% endfor %}
 				</ul>
 			{% endif %}
+		{% else %}
+			<p>
+				<div>Use the dropdown to query by name for a movie or a person (actor, director, etc.). Examples:</div>
+				<ul id="default-ul">
+					<li>movie, "truman show"</li>
+					<li>person, "scorsese"</li>
+				</ul>
+			</p>
 		{% endif %}
 	</form>
 {% endblock %}

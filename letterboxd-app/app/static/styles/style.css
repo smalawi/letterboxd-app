@@ -34,6 +34,10 @@ a:visited {
 	color: blue;
 }
 
+#movie-header {
+	margin-bottom: 10px;
+}
+
 #movie-header h1 {
 	display: inline-block;
 }
@@ -44,8 +48,9 @@ a:visited {
 	padding-left: 8px;
 }
 
-td {
-	padding: 0 100px 0 0;
+#personTable {
+	table-layout: fixed;
+	width: 380px;
 }
 
 th {
@@ -63,6 +68,12 @@ ul {
 	list-style-type: none; /* Remove bullets */
 	padding: 0; /* Remove padding */
 	margin: 0; /* Remove margins */
+}
+
+#default-ul {
+	list-style-type: disc;
+	margin-bottom: 1em;
+	padding-left: 30px;
 }
 
 .hidden {

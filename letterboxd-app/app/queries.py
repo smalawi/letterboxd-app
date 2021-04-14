@@ -7,6 +7,7 @@ def search_for_movie(search_term):
 		SELECT
 			m.movie_name,
 			m.movie_href,
+			b.person_name as director,
 			um.latest_rating AS rating 
 		FROM
 			Movie m
@@ -14,6 +15,27 @@ def search_for_movie(search_term):
 			UserMovie um
 		ON
 			m.movie_id = um.movie_id
+		LEFT JOIN (
+			SELECT
+				a.movie_id,
+				p.person_name
+			FROM (
+				SELECT
+					movie_id,
+					MIN(person_id) AS person_id
+				FROM
+					MoviePerson
+				WHERE
+					role = 'director'
+				GROUP BY movie_id
+				) a
+			LEFT JOIN
+				Person p
+			ON
+				a.person_id = p.person_id
+			) b
+		ON
+			m.movie_id = b.movie_id
 		WHERE
 			UPPER(unaccent(m.movie_name)) LIKE UPPER(unaccent('%{}%'))
 		ORDER BY m.movie_name
@@ -61,7 +83,16 @@ def search_for_person(search_term):
 
 def get_movie_info(movie_href):
 	query = """
-		SELECT * FROM Movie WHERE movie_href = '{}';
+		SELECT
+			m.*,
+			um.latest_rating AS rating 
+		FROM
+			Movie m
+		LEFT JOIN
+			UserMovie um
+		ON
+			m.movie_id = um.movie_id
+		WHERE m.movie_href = '{}';
 		""".format(movie_href)
 	results = select(query)
 	
@@ -98,7 +129,7 @@ def get_person_movies(person_id):
 			m.year,
 			m.movie_href,
 			mp.role,
-			um.latest_rating,
+			um.latest_rating AS rating,
 			m.movie_href
 		FROM MoviePerson mp
 		LEFT JOIN Movie m
