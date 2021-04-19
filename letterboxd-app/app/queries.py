@@ -114,6 +114,17 @@ def get_movie_persons(movie_href):
 	
 	return results
 
+def get_review_info(movie_href):
+	query = """
+		SELECT *
+		FROM Review
+		WHERE review_href LIKE '{}/%'
+		ORDER BY viewing_date DESC;
+		""".format(movie_href)
+	results = select(query)
+	
+	return results
+
 def get_person_name(person_id):
 	query = """
 		SELECT person_name FROM Person WHERE person_id = '{}';

@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, session
+import requests
 
 from app import app
 from app.forms import QueryForm
-from app.queries import search_for_movie, search_for_person, get_movie_info, get_movie_persons, get_person_name, get_person_movies
+from app.queries import search_for_movie, search_for_person, get_movie_info, get_movie_persons, get_review_info, get_person_name, get_person_movies
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -31,8 +32,15 @@ def index():
 def movie(movie_href):
 	movie_info = get_movie_info(movie_href)
 	movieperson_info = get_movie_persons(movie_href)
+	review_info = get_review_info(movie_href)
 
 	movie_info['star_rating'] = (movie_info['rating'] // 2) * '\u2605' + (movie_info['rating'] % 2) * '\u00BD' if movie_info['rating'] else 'No rating'
+
+	for r in review_info:
+		r['star_rating'] = (r['rating'] // 2) * '\u2605' + (r['rating'] % 2) * '\u00BD' if r['rating'] else 'No rating'
+
+		review_url = 'https://letterboxd.com/s/full-text/viewing:{}/'.format(r['viewing_id'])
+		r['review_text'] = requests.get(review_url).text
 
 	ref = {
 		'actor':			1,
@@ -46,7 +54,12 @@ def movie(movie_href):
 
 	cast_count = len([c for c in movieperson_info if c['role'] == 'actor'])
 
-	return render_template('movie.html', movie_href=movie_href, movie_info=movie_info, movieperson_info=sorted_movieperson_info, cast_count=cast_count)
+	return render_template('movie.html',
+							movie_href=movie_href,
+							movie_info=movie_info,
+							review_info=review_info,
+							movieperson_info=sorted_movieperson_info,
+							cast_count=cast_count)
 
 @app.route('/person/<person_id>')
 def person(person_id):
@@ -71,7 +84,7 @@ def person(person_id):
 	unique_roles[0] = temp
 
 	return render_template('person.html',
-								person_id=person_id,
-								person_name=person_name,
-								person_movies_info=person_movies_info,
-								unique_roles=unique_roles)
+							person_id=person_id,
+							person_name=person_name,
+							person_movies_info=person_movies_info,
+							unique_roles=unique_roles)

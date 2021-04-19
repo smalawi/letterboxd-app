@@ -41,6 +41,28 @@
 	{% else %}
 	<div>None recorded</div>
 	{% endif %}
+	<h2>Reviews</h2>
+	{% if review_info|length > 0 %}
+		<ul>
+			{% for review in review_info %}
+				<li>
+					<div class="inner-rounded-panel">
+						<div class="panel-contents">
+							<div>
+								<span style="display: inline-block; width: 100px;">{{ review.star_rating }}</span>
+								<span style="font-style: italic;">{{ review.viewing_date.strftime('%B %-d, %Y') }}</span>
+							</div>
+							<div class="review-text">
+								{{ review.review_text|safe }}
+							</div>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+	<div>No reviews submitted</div>
+	{% endif %}
 	<script src="{{ url_for('static', filename='js/jquery.min.js') }}" type="text/javascript"></script>
 	<script type=text/javascript src="{{
 		url_for('static', filename='js/movie_cast_collapse.js') }}" defer></script>
