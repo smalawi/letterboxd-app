@@ -76,11 +76,15 @@ class LetterboxdWebScraper:
 		film_url_text = requests.get(film_url).text
 		film_soup = BeautifulSoup(film_url_text, 'html.parser')
 
-		wrapper_tag = film_soup.find('div', id='film-page-wrapper')
+		film_data_var_pattern = re.compile('var filmData = (.*?);')
+		scripts = film_soup.find_all('script')
 
-		movie_id = int(wrapper_tag.find(attrs={'data-film-id':True})['data-film-id'])
-		name = wrapper_tag.find(attrs={'data-film-name':True})['data-film-name']
-		year = int(wrapper_tag.find(attrs={'data-film-release-year':True})['data-film-release-year'])
+		for script in scripts:
+			if film_data_var_pattern.search(str(script.string)):
+				film_data_string = film_data_var_pattern.search(str(script.string)).group()
+				film_data_pattern = re.compile('id: (.*?),.* name: "(.*?)",.* releaseYear: "(.*?)",')
+				movie_id, name, year = film_data_pattern.search(film_data_string).group(1, 2, 3)
+				break
 
 		film_info = {
 			'movie_id': movie_id,
@@ -161,12 +165,12 @@ class LetterboxdWebScraper:
 		def parse_date(film_tag, review_href):
 			try:
 				date_str = film_tag.find('span', class_='_nobr').text
-				parsed_date_str = datetime.strptime(date_str, '%d %b, %Y').strftime('%m/%d/%Y')
+				parsed_date_str = datetime.strptime(date_str, '%d %b %Y').strftime('%m/%d/%Y')
 
 			except ValueError:
 
 				try:
-					date_str = film_tag.find('time', class_='localtime-dd-mmm-yyyy')['datetime'].split('T')[0]
+					date_str = film_tag.find('time', class_='localtime-d-mmm-yyyy')['datetime'].split('T')[0]
 					parsed_date_str = datetime.strptime(date_str, '%Y-%m-%d').strftime('%m/%d/%Y')
 
 				except ValueError:
