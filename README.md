@@ -1,5 +1,5 @@
 # Intro
-WIP - see latest version [here](https://letterboxd-client.herokuapp.com/index)
+This app lived [here](https://letterboxd-client.herokuapp.com/index), but is offline for the time being on account of Heroku eliminating its free tier.
 
 The nested `letterboxd-app` folder is the Flask application directory.
 
