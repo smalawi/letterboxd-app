@@ -88,7 +88,7 @@ class LetterboxdWebScraper:
 
 		film_info = {
 			'movie_id': movie_id,
-			'name': name,
+			'name': name.replace('\\', ''),
 			'year': year,
 			'cast_and_crew': []
 		}
@@ -186,7 +186,7 @@ class LetterboxdWebScraper:
 			for film_tag in soup.find_all('li', class_='film-detail'):
 				viewing_id = int(film_tag.find(attrs={'data-likeable-uid':True})['data-likeable-uid'].split(':')[-1])
 				movie_id = int(film_tag.find(attrs={'data-film-id':True})['data-film-id'])
-				review_href = film_tag.find('a', class_='context')['href'].split('/', 3)[-1]
+				review_href = film_tag.find('a')['href'].split('/', 3)[-1]
 				viewing_date = parse_date(film_tag, review_href)
 				try:
 					rating = int(film_tag.find('span', class_='rating')['class'][-1].split('-')[-1])
