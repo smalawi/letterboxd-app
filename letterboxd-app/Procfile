@@ -1,1 +1,2 @@
-web: gunicorn -b :$PORT letterboxd:app
+# TODO: Modify this Procfile to fit your needs
+web: gunicorn letterboxd:app
